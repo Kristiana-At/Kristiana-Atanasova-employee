@@ -40,7 +40,7 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
         List<List<String>> data = new ArrayList<>();
-        Scanner sc = new Scanner(new File("E:/student/Kristiana_Atanasova_SirmaTask/Book1.csv"));
+        Scanner sc = new Scanner(new File("E:/student/Kristiana_Atanasova_task/Book1.csv"));
         while (sc.hasNext()) {
             String line = sc.next();
             String[] values = line.split(",");
@@ -49,10 +49,12 @@ public class Main {
         sc.close();
         List<Project> projects = takeEmpProjects(data);
 
-        List<String[]> workedTogether = new ArrayList<>();
+
+        List<List<String>> workedTogether = new ArrayList<>();
         for (int i = 0; i < projects.size(); i++) {
             for (int j = i + 1; j < projects.size(); j++) {
-                if((projects.get(i).getProjectId() == projects.get(j).getProjectId()) && ((projects.get(i).getDateFrom().isAfter(projects.get(j).getDateFrom()) && projects.get(i).getDateTo().isBefore(projects.get(j).getDateTo())) ||
+                if((projects.get(i).getProjectId() == projects.get(j).getProjectId()) &&
+                        ((projects.get(i).getDateFrom().isAfter(projects.get(j).getDateFrom()) && projects.get(i).getDateTo().isBefore(projects.get(j).getDateTo())) ||
                         (projects.get(i).getDateFrom().isBefore(projects.get(j).getDateFrom()) && projects.get(i).getDateTo().isBefore(projects.get(j).getDateTo()) && projects.get(i).getDateTo().isAfter(projects.get(j).getDateFrom())) ||
                         (projects.get(i).getDateFrom().isAfter(projects.get(j).getDateFrom()) && projects.get(i).getDateTo().isAfter(projects.get(j).getDateTo())&& projects.get(i).getDateFrom().isBefore(projects.get(j).getDateTo()))||
                         (projects.get(i).getDateFrom().isBefore(projects.get(j).getDateFrom()) && projects.get(i).getDateTo().isAfter(projects.get(j).getDateTo())))){
@@ -64,24 +66,19 @@ public class Main {
                             duration = (ChronoUnit.DAYS.between(projects.get(j).getDateFrom(), projects.get(i).getDateTo()));
                         }
                     }else{
-                        if(projects.get(i).getDateFrom().isAfter(projects.get(j).getDateTo())){
+                        if(projects.get(i).getDateFrom().isAfter(projects.get(j).getDateFrom())){
                             duration = (ChronoUnit.DAYS.between(projects.get(i).getDateFrom(), projects.get(j).getDateTo()));
                         }else{
                             duration = (ChronoUnit.DAYS.between(projects.get(j).getDateFrom(), projects.get(j).getDateTo()));
                         }
                     }
                     String[] info = {Integer.toString(projects.get(i).getEmpNo()),Integer.toString(projects.get(j).getEmpNo()), Long.toString(duration)};
-                    workedTogether.add(info);
-                    for (int k = 0; k < 3; k++) {
-                        System.out.print(info[k]);
-                        System.out.print("  ");
-                    }
-                    System.out.println();
-
+                    workedTogether.add(Arrays.asList(info));
                 }
-
             }
-
         }
+        workedTogether.sort(workedTogether.ge);
+        System.out.println(workedTogether);
+
     }
 }
